@@ -1,0 +1,13 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "build",
+        "watch": true
+    },
+    "exclude": [
+         "node_modules",
+         "typings/browser.d.ts",
+         "typings/browser"
+    ]
+ }
