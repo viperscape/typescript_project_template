@@ -1,15 +1,14 @@
 'use strict';
 const gulp = require("gulp");
 const ts = require('gulp-typescript');
-const clean = require('gulp-clean');
 const source = require('vinyl-source-stream');
 const browserify = require('browserify');
 
 gulp.task('default', ['build'], function() {
     gulp.watch('server/*.ts', ['typescript_server']);
-    gulp.watch('client/main.ts', ['browserify']);
-    gulp.watch('client/static/*', ['static-client']);
-    gulp.watch('server/static/*', ['static-server']);
+    gulp.watch('client/*.ts', ['browserify']);
+    gulp.watch('client/static/**/*.*', ['static-client']);
+    gulp.watch('server/static/**/*.*', ['static-server']);
 });
 
 /// bundle client modules
@@ -23,6 +22,7 @@ gulp.task('browserify', ['typescript_client'], function () {
 
 gulp.task('typescript_server', function() {
     var tsProject = ts.createProject('tsconfig.json');
+    tsProject.config.exclude.push("client");
     var tsResult = tsProject.src()
 		.pipe(tsProject());
 	
@@ -31,6 +31,7 @@ gulp.task('typescript_server', function() {
 
 gulp.task('typescript_client', function() {
     var tsProject = ts.createProject('tsconfig.json');
+    tsProject.config.exclude.push("server");
     var tsResult = tsProject.src()
 		.pipe(tsProject());
 	
@@ -49,9 +50,4 @@ gulp.task('static-client', function() {
         .pipe(gulp.dest("build/client"));
 });
 
-gulp.task('clean', function () {
-    return gulp.src('build', {read: false})
-        .pipe(clean());
-});
-
-gulp.task('build', ['browserify']);
+gulp.task('build', ['browserify','typescript_server','static-server','static-client']);

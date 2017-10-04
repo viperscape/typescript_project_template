@@ -1,5 +1,4 @@
 {
-    "eslint.enable": false,
     "files.exclude": {
         "node_modules/": true
     }
