@@ -1,14 +1,16 @@
 'use strict';
 const gulp = require("gulp");
 const ts = require('gulp-typescript');
+const clean = require('gulp-clean');
+const seq = require('gulp-sequence')
 const source = require('vinyl-source-stream');
 const browserify = require('browserify');
 
-gulp.task('default', ['build'], function() {
-    gulp.watch('server/*.ts', ['typescript_server']);
-    gulp.watch('client/*.ts', ['browserify']);
-    gulp.watch('client/static/**/*.*', ['static-client']);
-    gulp.watch('server/static/**/*.*', ['static-server']);
+gulp.task('default', ['start'], function() {
+    gulp.watch('server/**/*.ts', ['typescript_server']);
+    gulp.watch('client/**/*.ts', ['browserify']);
+    gulp.watch(["client/**/*.*", "!client/**/*.ts"], ['static-client']);
+    gulp.watch(["server/**/*.*", "!server/**/*.ts"], ['static-server']);
 });
 
 /// bundle client modules
@@ -40,14 +42,21 @@ gulp.task('typescript_client', function() {
 
 /// copy static assets
 gulp.task('static-server', function() {
-    return gulp.src('server/static/**/*.*')
-        .pipe(gulp.dest("build/server/static"));
+    return gulp.src(["server/**/*.*", "!server/**/*.ts"])
+        .pipe(gulp.dest("build/server"));
 });
 
 /// copy static, but place at client root
 gulp.task('static-client', function() {
-    return gulp.src('client/static/**/*.*')
+    return gulp.src(["client/**/*.*", "!client/**/*.ts"])
         .pipe(gulp.dest("build/client"));
 });
 
+gulp.task('clean', function () {
+    return gulp.src('build', {read: false})
+        .pipe(clean());
+});
+
+
 gulp.task('build', ['browserify','typescript_server','static-server','static-client']);
+gulp.task('start', seq("clean","build"));

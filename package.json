@@ -6,12 +6,13 @@
         "name": "viperscape",
         "url": ""
     },
-    "dependencies": {
-    },
+    "dependencies": {},
     "devDependencies": {
         "@types/node": "^8.0.32",
         "browserify": "^14.4.0",
         "gulp": "^3.9.1",
+        "gulp-clean": "^0.3.2",
+        "gulp-sequence": "^0.4.6",
         "gulp-typescript": "^3.2.2",
         "typescript": "^2.5.3",
         "vinyl-source-stream": "^1.1.0"
